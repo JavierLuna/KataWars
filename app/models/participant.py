@@ -21,7 +21,9 @@ class Participant(db.Model):
                                          foreign_keys='notifications.c.sender_id')
 
     score = db.Column(db.Integer, default=0)
+    base_score = db.Column(db.Integer, default=0)
     completed_challenges = db.Column(db.Integer, default=0)
+    base_completed_challenges = db.Column(db.Integer, default=0)
 
     password_hash = db.Column(db.Text(), nullable=False)
 

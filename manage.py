@@ -80,6 +80,10 @@ def notify_all():
         print("Oops! Shit happened!")
         db.session.rollback()
 
+@manager.command
+def leaderboard():
+    participants = Participant.query.order_by(Participant.score.desc())
+
 
 manager.add_command('shell', Shell(make_context=make_shell_context))
 manager.add_command('db', MigrateCommand)

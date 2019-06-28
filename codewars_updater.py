@@ -10,6 +10,8 @@ application = create_app()
 while 1:
     with application.app_context():
         participants = Participant.query.filter_by(is_superuser=False).all()
+        if not participants:
+            print("\t\t\t!!!!WARNING: NO USERS!!!")
         skills = Skill.query.filter_by(visible=True).all()
         for participant in participants:
             time.sleep(0.5)
@@ -18,9 +20,18 @@ while 1:
             score = get_score(profile)
             completed_challenges = get_completed_challenges(profile)
 
-            if completed_challenges > participant.completed_challenges:
+            if completed_challenges and not participant.base_completed_challenges:
+                participant.base_completed_challenges = completed_challenges
+                print("Setting base challenges...")
+
+            if score and not participant.base_score:
+                participant.base_score = score
+                print("Setting base score...")
+
+            if completed_challenges > participant.completed_challenges + participant.base_completed_challenges:
                 print("\t\t\tWow!! Participant", participant.codewars_username, "has completed",
-                      completed_challenges - participant.completed_challenges, "additional katas since last time!")
+                      completed_challenges - (participant.completed_challenges + participant.base_completed_challenges),
+                      "additional katas since last time!")
                 n = Notification(description="Congrats on the new kata!", forwared_to=participant)
                 db.session.add(n)
                 for skill in skills:
@@ -30,8 +41,8 @@ while 1:
                         db.session.add(n)
                         print("Participant", participant.codewars_username, "won skill", skill.name)
                         break
-                participant.score = int(score)
-                participant.completed_challenges = int(score)
+                participant.score = score - participant.base_score
+                participant.completed_challenges = completed_challenges - participant.base_completed_challenges
                 print("Saving participant stats and skills...")
                 db.session.add(participant)
                 try:
