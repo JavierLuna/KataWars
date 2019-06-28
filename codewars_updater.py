@@ -2,6 +2,7 @@ import time
 
 from app import create_app, db
 from app.codewars.api import get_profile, get_score, get_completed_challenges
+from app.models.notifications import Notification
 from app.models.participant import Participant
 from app.models.skills import Skill
 
@@ -20,9 +21,13 @@ while 1:
             if completed_challenges > participant.completed_challenges:
                 print("\t\t\tWow!! Participant", participant.codewars_username, "has completed",
                       completed_challenges - participant.completed_challenges, "additional katas since last time!")
+                n = Notification(description="Congrats on the new kata!", forwared_to=participant)
+                db.session.add(n)
                 for skill in skills:
                     if skill.can_consume(participant):
                         participant.add_skill(skill.id)
+                        n = Notification(description="It looks like you have a new skill!", forwared_to=participant)
+                        db.session.add(n)
                         print("Participant", participant.codewars_username, "won skill", skill.name)
                         break
                 participant.score = int(score)
