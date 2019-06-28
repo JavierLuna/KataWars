@@ -25,15 +25,14 @@ def make_shell_context():
     def flush():
         db.session.rollback()
 
-    return dict(app=app, db=db, db_add=db_add, flush=flush, clear=clear, Participant=Participant, Skill=Skill, Notification=Notification)
+    return dict(app=app, db=db, db_add=db_add, flush=flush, clear=clear, Participant=Participant, Skill=Skill,
+                Notification=Notification)
 
 
-@manager.command
-def create_superuser():
+def _create_user(superuser=False):
     username = input("Username: ")
     password = getpass("Password: ")
-
-    participant = Participant(username=username, password=password, is_superuser=True)
+    participant = Participant(username=username, password=password, is_superuser=superuser)
     db.session.add(participant)
     try:
         db.session.commit()
@@ -41,6 +40,16 @@ def create_superuser():
     except:
         print("Oops, shit happened!")
         db.session.rollback()
+
+
+@manager.command
+def create_superuser():
+    _create_user(superuser=True)
+
+
+@manager.command
+def create_user():
+    _create_user(superuser=False)
 
 
 @manager.command
@@ -79,6 +88,7 @@ def notify_all():
     except:
         print("Oops! Shit happened!")
         db.session.rollback()
+
 
 @manager.command
 def leaderboard():
