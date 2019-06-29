@@ -107,14 +107,10 @@ def skill(token):
     print("Done :)")
 
 
-def notify(token):
-    pass
-
 
 if __name__ == '__main__':
     commands = {'listen': listen,
-                'skill': skill,
-                'notify': notify}
+                'skill': skill}
 
     parser = argparse.ArgumentParser()
     parser.add_argument("command", help="Command to use", choices=list(commands.keys()))
