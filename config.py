@@ -25,7 +25,12 @@ class DevelopmentConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
                               'sqlite:///' + os.path.join(basedir, 'data-dev.sqlite')
 
+class ProductionConfig(Config):
+    DEBUG = False
+    SECRET_KEY = os.environ.get('SECRET_KEY')
+    SQLALCHEMY_DATABASE_URI = os.environ.get('PRODUCTION_DATABASE_URL')
 
 config = {
-    'default': DevelopmentConfig
+    'default': DevelopmentConfig,
+    'production': ProductionConfig
 }

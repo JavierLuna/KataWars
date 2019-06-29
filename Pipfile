@@ -16,6 +16,7 @@ marshmallow-sqlalchemy = "*"
 flask-httpauth = "*"
 pyjwt = "*"
 flask-cors = "*"
+mysqlclient = "*"
 
 [requires]
 python_version = "3.6"
