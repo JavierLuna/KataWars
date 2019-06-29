@@ -26,12 +26,12 @@ def paginate(schema):
             page = request.args.get('page', 1, type=int)
             rv = f(*args, **kwargs)
             paginator = rv.paginate(page, per_page=current_app.config['RESULTS_PER_API_CALL'], error_out=False)
-            resulting_data = PaginationSchema().dump({'objects': s.dump(paginator.items, many=True),
+            resulting_data = PaginationSchema().dump({'objects': s.dump(paginator.items, many=True).data,
                                                       'next_page': paginator.next_num if paginator.has_next else None,
                                                       'prev_page': paginator.prev_num if paginator.has_prev else None,
                                                       'pages': paginator.pages,
                                                       'total_objects': paginator.total})
-            return jsonify(resulting_data)
+            return jsonify(resulting_data.data)
 
         return wrapped
 
@@ -44,7 +44,7 @@ def detail(schema):
         def wrapped(*args, **kwargs):
             s = schema()
             instance = f(*args, **kwargs)
-            return jsonify(s.dump(instance))
+            return jsonify(s.dump(instance).data)
 
         return wrapped
 

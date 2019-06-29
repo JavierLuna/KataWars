@@ -37,7 +37,7 @@ while 1:
                 for skill in skills:
                     if skill.can_consume(participant):
                         participant.add_skill(skill.id)
-                        n = Notification(description="It looks like you have a new skill!", forwared_to=participant)
+                        n = Notification(description=f"It looks like you have a new skill! \n You've received {skill.name}!!", forwared_to=participant)
                         db.session.add(n)
                         print("Participant", participant.codewars_username, "won skill", skill.name)
                         break
