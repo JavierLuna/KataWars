@@ -21,10 +21,15 @@ def activate_skill(id):
     target = Participant.query.filter_by(username=target).first()
     if g.user.is_superuser or (target and g.user.use_skill(id)):
         skill = Skill.query.get(id)
-        n = Notification(description=f"You have been targeted by: !!! {skill.name} !!!",
-                         forwared_to=target, sender=g.user)
+        n = Notification(
+            description=f"You have been targeted by: !!! {skill.name} !!! Skill description: {skill.description}",
+            forwared_to=target, sender=g.user)
+
+        n2 = Notification(description=f"User {g.user.username} activated skill {skill.name} onto {target.username}")
+
         db.session.add(g.user)
         db.session.add(n)
+        db.session.add(n2)
         try:
             db.session.commit()
         except:

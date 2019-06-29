@@ -1,3 +1,4 @@
+import os
 import time
 
 from app import create_app, db
@@ -6,7 +7,7 @@ from app.models.notifications import Notification
 from app.models.participant import Participant
 from app.models.skills import Skill
 
-application = create_app()
+application = create_app(os.getenv('ENV_CONFIG'))
 while 1:
     with application.app_context():
         participants = Participant.query.filter_by(is_superuser=False).all()
