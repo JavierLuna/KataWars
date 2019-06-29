@@ -93,6 +93,10 @@ def notify_all():
 @manager.command
 def leaderboard():
     participants = Participant.query.order_by(Participant.score.desc())
+    print("SCOREBOARD:")
+    print("===========================")
+    for p in participants:
+        print(p.username, "\t"*3,p.score)
 
 
 manager.add_command('shell', Shell(make_context=make_shell_context))
