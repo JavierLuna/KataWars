@@ -31,7 +31,7 @@ def activate_skill(id):
             print(f"Error when user {g.user.username} tried to activate skill {skill.id} on {target.username}")
             db.session.rollback()
         return {}, 204
-    abort(500)
+    return {'error': "You cant use this skill!"}, 500
 
 
 @api_v1.route('/skill', methods=['GET'])

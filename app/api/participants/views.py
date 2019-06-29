@@ -3,7 +3,7 @@ from flask import g, abort
 from app.api.participants.schemas import ParticipantSchema
 from app.models.participant import Participant
 from .. import api_v1, auth_basic
-from ..decorators import paginate, detail
+from ..decorators import paginate, detail, json
 
 
 @api_v1.route('/participant/me', methods=['GET'])
@@ -15,12 +15,9 @@ def me_participant():
 
 @api_v1.route('/participant', methods=['GET'])
 @auth_basic.login_required
-@paginate(ParticipantSchema)
+@json
 def list_participants():
-    if g.user.is_superuser:
-        return Participant.query.filter_by(is_superuser=False)
-    else:
-        return Participant.query.filter_by(username=g.user.username)
+    return [participant.username for participant in Participant.query.filter_by(is_superuser=False).all()]
 
 
 @api_v1.route('/participant/<int:id>', methods=['GET'])
